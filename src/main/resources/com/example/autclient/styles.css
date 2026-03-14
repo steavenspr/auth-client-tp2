@@ -1,0 +1,11 @@
+.strength-weak .bar {
+    -fx-background-color: red;
+}
+
+.strength-medium .bar {
+    -fx-background-color: orange;
+}
+
+.strength-strong .bar {
+    -fx-background-color: green;
+}

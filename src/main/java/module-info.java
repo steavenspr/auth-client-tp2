@@ -5,6 +5,7 @@ module com.example.autclient {
     requires org.controlsfx.controls;
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.fontawesome5;
     requires org.kordamp.bootstrapfx.core;
 
     requires java.net.http;

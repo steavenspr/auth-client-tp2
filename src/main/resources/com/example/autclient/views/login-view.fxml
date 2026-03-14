@@ -7,6 +7,8 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -14,25 +16,45 @@
       spacing="15"
       alignment="CENTER"
       prefWidth="400"
-      prefHeight="500">
+      prefHeight="520"
+      style="-fx-background-color: #f8f9fa;">
 
     <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
+        <Insets top="50" right="50" bottom="50" left="50"/>
     </padding>
 
-    <Label text="Connexion" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label text="Connexion"
+           style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #343a40;"/>
 
-    <Label text="Email"/>
-    <TextField fx:id="emailField" promptText="Entrez votre email"/>
+    <VBox spacing="5">
+        <Label text="Email" style="-fx-font-weight: bold; -fx-text-fill: #495057;"/>
+        <HBox spacing="8" alignment="CENTER_LEFT"
+              style="-fx-background-color: white; -fx-border-color: #ced4da; -fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 6 10 6 10;">
+            <FontIcon iconLiteral="fas-envelope" iconSize="14" iconColor="#6c757d"/>
+            <TextField fx:id="emailField" promptText="Entrez votre email"
+                       style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                       HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </VBox>
 
-    <Label text="Mot de passe"/>
-    <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe"/>
+    <VBox spacing="5">
+        <Label text="Mot de passe" style="-fx-font-weight: bold; -fx-text-fill: #495057;"/>
+        <HBox spacing="8" alignment="CENTER_LEFT"
+              style="-fx-background-color: white; -fx-border-color: #ced4da; -fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 6 10 6 10;">
+            <FontIcon iconLiteral="fas-lock" iconSize="14" iconColor="#6c757d"/>
+            <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe"
+                           style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                           HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </VBox>
 
-    <Label fx:id="messageLabel" style="-fx-text-fill: red;"/>
+    <Label fx:id="messageLabel" style="-fx-text-fill: #dc3545; -fx-font-size: 12px;"/>
 
-    <Button fx:id="loginButton" text="Se connecter" onAction="#handleLogin"
-            maxWidth="Infinity"/>
+    <Button text="Se connecter" onAction="#handleLogin"
+            maxWidth="Infinity"
+            styleClass="btn,btn-primary"/>
 
-    <Hyperlink text="Pas encore de compte ? S'inscrire" onAction="#goToRegister"/>
+    <Hyperlink text="Pas encore de compte ? S'inscrire" onAction="#goToRegister"
+               style="-fx-text-fill: #007bff;"/>
 
 </VBox>

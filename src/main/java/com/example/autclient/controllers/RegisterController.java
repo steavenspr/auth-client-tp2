@@ -6,8 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class RegisterController {
@@ -15,7 +15,7 @@ public class RegisterController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private PasswordField passwordConfirmField;
-    @FXML private ProgressBar strengthBar;
+    @FXML private HBox strengthBar;
     @FXML private Label strengthLabel;
     @FXML private Label messageLabel;
 
@@ -30,10 +30,10 @@ public class RegisterController {
 
     private void updateStrengthIndicator(String password) {
         if (password.isEmpty()) {
-            strengthBar.setProgress(0);
-            strengthBar.setStyle("");
+            strengthBar.setStyle("-fx-background-color: #dee2e6; -fx-background-radius: 4;");
+            strengthBar.setPrefWidth(0);
             strengthLabel.setText("Force du mot de passe : —");
-            strengthLabel.setStyle("-fx-font-size: 12px;");
+            strengthLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6c757d;");
             return;
         }
 
@@ -44,19 +44,21 @@ public class RegisterController {
         if (password.chars().anyMatch(Character::isDigit)) score++;
         if (password.chars().anyMatch(c -> "!@#$%^&*()_+-=[]{}|;':\",./<>?".indexOf(c) >= 0)) score++;
 
-        if (score <= 2) {
-            strengthBar.setProgress(0.33);
-            strengthBar.setStyle("-fx-accent: red;");
+        boolean longEnough = password.length() >= 12;
+
+        if (!longEnough || score <= 2) {
+            strengthBar.setStyle("-fx-background-color: red; -fx-background-radius: 4;");
+            strengthBar.setPrefWidth(100);
             strengthLabel.setText("Force du mot de passe : Faible");
             strengthLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: red;");
         } else if (score <= 3) {
-            strengthBar.setProgress(0.66);
-            strengthBar.setStyle("-fx-accent: orange;");
+            strengthBar.setStyle("-fx-background-color: orange; -fx-background-radius: 4;");
+            strengthBar.setPrefWidth(200);
             strengthLabel.setText("Force du mot de passe : Moyen");
             strengthLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: orange;");
         } else {
-            strengthBar.setProgress(1.0);
-            strengthBar.setStyle("-fx-accent: green;");
+            strengthBar.setStyle("-fx-background-color: green; -fx-background-radius: 4;");
+            strengthBar.setPrefWidth(300);
             strengthLabel.setText("Force du mot de passe : Fort");
             strengthLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: green;");
         }
@@ -95,7 +97,7 @@ public class RegisterController {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/autclient/views/login-view.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(loader.load(), 400, 580));
+            stage.setScene(new Scene(loader.load(), 400, 520));
         } catch (Exception e) {
             messageLabel.setText("Erreur de navigation.");
         }

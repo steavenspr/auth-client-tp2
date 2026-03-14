@@ -5,44 +5,67 @@
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.autclient.controllers.RegisterController"
-      spacing="15"
+      spacing="12"
       alignment="CENTER"
       prefWidth="400"
-      prefHeight="580">
+      prefHeight="620"
+      style="-fx-background-color: #f8f9fa;">
 
     <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
+        <Insets top="40" right="50" bottom="40" left="50"/>
     </padding>
 
-    <Label text="Inscription" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label text="Inscription"
+           style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #343a40;"/>
 
-    <Label text="Email"/>
-    <TextField fx:id="emailField" promptText="Entrez votre email"/>
+    <Label text="Email" style="-fx-font-weight: bold; -fx-text-fill: #495057;"/>
+    <HBox spacing="8" alignment="CENTER_LEFT"
+          style="-fx-border-color: #ced4da; -fx-border-radius: 4; -fx-background-color: white; -fx-background-radius: 4; -fx-padding: 4 8 4 8;">
+        <FontIcon iconLiteral="fas-envelope" iconSize="14" iconColor="#6c757d"/>
+        <TextField fx:id="emailField" promptText="Entrez votre email"
+                   style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                   HBox.hgrow="ALWAYS"/>
+    </HBox>
 
-    <Label text="Mot de passe"/>
-    <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe"/>
+    <Label text="Mot de passe" style="-fx-font-weight: bold; -fx-text-fill: #495057;"/>
+    <HBox spacing="8" alignment="CENTER_LEFT"
+          style="-fx-border-color: #ced4da; -fx-border-radius: 4; -fx-background-color: white; -fx-background-radius: 4; -fx-padding: 4 8 4 8;">
+        <FontIcon iconLiteral="fas-lock" iconSize="14" iconColor="#6c757d"/>
+        <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe"
+                       style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                       HBox.hgrow="ALWAYS"/>
+    </HBox>
 
-    <ProgressBar fx:id="strengthBar" progress="0"
-                 maxWidth="Infinity" prefHeight="10"/>
+    <HBox fx:id="strengthBar" prefHeight="8" maxWidth="Infinity"
+          style="-fx-background-color: #dee2e6; -fx-background-radius: 4;"/>
 
     <Label fx:id="strengthLabel" text="Force du mot de passe : —"
-           style="-fx-font-size: 12px;"/>
+           style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
 
-    <Label text="Confirmer le mot de passe"/>
-    <PasswordField fx:id="passwordConfirmField" promptText="Confirmez votre mot de passe"/>
+    <Label text="Confirmer le mot de passe" style="-fx-font-weight: bold; -fx-text-fill: #495057;"/>
+    <HBox spacing="8" alignment="CENTER_LEFT"
+          style="-fx-border-color: #ced4da; -fx-border-radius: 4; -fx-background-color: white; -fx-background-radius: 4; -fx-padding: 4 8 4 8;">
+        <FontIcon iconLiteral="fas-lock" iconSize="14" iconColor="#6c757d"/>
+        <PasswordField fx:id="passwordConfirmField" promptText="Confirmez votre mot de passe"
+                       style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                       HBox.hgrow="ALWAYS"/>
+    </HBox>
 
-    <Label fx:id="messageLabel" style="-fx-text-fill: red;"/>
+    <Label fx:id="messageLabel" style="-fx-text-fill: #dc3545; -fx-font-size: 12px;"/>
 
     <Button text="S'inscrire" onAction="#handleRegister"
-            maxWidth="Infinity"/>
+            maxWidth="Infinity"
+            styleClass="btn,btn-success"/>
 
-    <Hyperlink text="Déjà un compte ? Se connecter" onAction="#goToLogin"/>
+    <Hyperlink text="Déjà un compte ? Se connecter" onAction="#goToLogin"
+               style="-fx-text-fill: #007bff;"/>
 
 </VBox>
