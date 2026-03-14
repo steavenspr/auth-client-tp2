@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>aut-client</artifactId>
+    <artifactId>auth-client-tp2</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>aut-client</name>
 

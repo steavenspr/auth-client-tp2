@@ -12,7 +12,7 @@ public class MainApp extends Application {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/example/autclient/views/login-view.fxml"));
         Scene scene = new Scene(loader.load(), 400, 500);
-        stage.setTitle("Auth Client - TP1");
+        stage.setTitle("Auth Client - TP2");
         stage.setScene(scene);
         stage.show();
     }
