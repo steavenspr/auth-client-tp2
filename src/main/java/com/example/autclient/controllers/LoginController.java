@@ -27,12 +27,34 @@ public class LoginController {
             return;
         }
 
+        // Générer un nonce unique (UUID)
+        String nonce = java.util.UUID.randomUUID().toString();
+        // Timestamp en secondes depuis epoch
+        long timestamp = System.currentTimeMillis() / 1000L;
+
         try {
-            String token = authService.login(email, password);
+            // Calculer le HMAC-SHA256 sur la concaténation email:nonce:timestamp
+            String data = email + ":" + nonce + ":" + timestamp;
+            String hmac = calculateHmacSHA256(password, data); // Utilise le mot de passe comme clé HMAC côté client
+
+            String token = authService.login(email, nonce, timestamp, hmac);
             goToProfile(token);
         } catch (Exception e) {
             messageLabel.setText("Échec de la connexion. Vérifiez vos identifiants.");
         }
+    }
+
+    // Utilitaire pour calculer le HMAC-SHA256
+    public String calculateHmacSHA256(String secret, String data) throws Exception {
+        javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+        javax.crypto.spec.SecretKeySpec secretKeySpec = new javax.crypto.spec.SecretKeySpec(secret.getBytes(java.nio.charset.StandardCharsets.UTF_8), "HmacSHA256");
+        mac.init(secretKeySpec);
+        byte[] hmacBytes = mac.doFinal(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hmacBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
     }
 
     @FXML

@@ -22,17 +22,29 @@ public class AuthService {
         throw new Exception(response.body());
     }
 
-    public String login(String email, String password) throws Exception {
+    public String login(String email, String nonce, long timestamp, String hmac) throws Exception {
+        String jsonPayload = String.format(
+                "{\"email\":\"%s\",\"nonce\":\"%s\",\"timestamp\":%d,\"hmac\":\"%s\"}",
+                email, nonce, timestamp, hmac);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/auth/login?email=" + email + "&password=" + password))
-                .POST(HttpRequest.BodyPublishers.noBody())
+                .uri(URI.create(BASE_URL + "/auth/login"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() == 200) {
-            // La réponse est "Login success. Token: xxx-xxx-xxx"
-            // On extrait juste le token
+            // On suppose que la réponse contient le token dans le champ accessToken (JSON)
             String body = response.body();
-            return body.replace("Login success. Token: ", "").trim();
+            // Extraire le token du JSON
+            int idx = body.indexOf("\"accessToken\":");
+            if (idx != -1) {
+                int start = body.indexOf('"', idx + 14) + 1;
+                int end = body.indexOf('"', start);
+                if (start > 0 && end > start) {
+                    return body.substring(start, end);
+                }
+            }
+            return body;
         }
         throw new Exception(response.body());
     }
