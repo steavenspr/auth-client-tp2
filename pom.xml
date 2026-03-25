@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>auth-client-tp2</artifactId>
+    <artifactId>auth-client-tp3</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>auth-client-tp2</name>
+    <name>auth-client-tp3</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

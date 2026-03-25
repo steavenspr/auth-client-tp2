@@ -10,6 +10,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+/**
+ * Contrôleur de la vue d'inscription.
+ * <p>
+ * Permet à l'utilisateur de créer un compte en saisissant un email et un mot de passe.
+ * Affiche un indicateur de force du mot de passe pour encourager l'utilisation de mots de passe robustes.
+ * Appelle le service AuthService pour l'inscription côté backend.
+ */
+
 public class RegisterController {
 
     @FXML private TextField emailField;
@@ -21,13 +29,18 @@ public class RegisterController {
 
     private final AuthService authService = new AuthService();
 
+    /**
+     * Initialise l'écouteur sur le champ mot de passe pour mettre à jour l'indicateur de force.
+     */
     @FXML
     public void initialize() {
-        passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
-            updateStrengthIndicator(newVal);
-        });
+        passwordField.textProperty().addListener((obs, oldVal, newVal) -> updateStrengthIndicator(newVal));
     }
 
+    /**
+     * Met à jour l'indicateur visuel de force du mot de passe.
+     * @param password mot de passe saisi par l'utilisateur
+     */
     private void updateStrengthIndicator(String password) {
         if (password.isEmpty()) {
             strengthBar.setStyle("-fx-background-color: #dee2e6; -fx-background-radius: 4;");

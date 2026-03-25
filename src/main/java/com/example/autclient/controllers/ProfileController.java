@@ -7,15 +7,27 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+
+/**
+ * Contrôleur de la vue de profil utilisateur.
+ * <p>
+ * Affiche les informations du profil après authentification forte.
+ * Utilise le token d'accès JWT pour récupérer les données utilisateur auprès du backend.
+ * Permet la déconnexion et le retour à l'écran de login.
+ * </p>
+ */
 public class ProfileController {
 
-    @FXML private Label welcomeLabel;
+    @FXML
+    private Label welcomeLabel;
 
     private final AuthService authService = new AuthService();
-    private String currentToken;
 
+    /**
+     * Initialise la vue de profil avec le token d'accès et charge les informations utilisateur.
+     * @param token accessToken JWT reçu après authentification
+     */
     public void initData(String token) {
-        this.currentToken = token;
         try {
             String response = authService.getProfile(token);
             welcomeLabel.setText(response);
@@ -24,6 +36,9 @@ public class ProfileController {
         }
     }
 
+    /**
+     * Gère la déconnexion et la navigation vers la vue de login.
+     */
     @FXML
     private void handleLogout() {
         try {
