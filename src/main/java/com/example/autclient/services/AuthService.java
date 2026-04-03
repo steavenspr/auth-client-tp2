@@ -1,9 +1,12 @@
 package com.example.autclient.services;
 
-import java.net.URI;
+import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Service d'authentification côté client.
@@ -27,7 +30,7 @@ public class AuthService {
      * @throws java.lang.InterruptedException interruption
      * @throws AuthServiceException si l'inscription échoue (email déjà utilisé, etc.)
      */
-    public String register(String email, String password) throws java.io.IOException, java.lang.InterruptedException, AuthServiceException {
+    public String register(String email, String password) throws IOException, InterruptedException, AuthServiceException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/auth/register?email=" + email + "&password=" + password))
                 .POST(HttpRequest.BodyPublishers.noBody())
@@ -50,7 +53,7 @@ public class AuthService {
      * @throws java.lang.InterruptedException interruption
      * @throws AuthServiceException si l'authentification échoue
      */
-    public String login(String email, String nonce, long timestamp, String hmac) throws java.io.IOException, java.lang.InterruptedException, AuthServiceException {
+    public AuthSession login(String email, String nonce, long timestamp, String hmac) throws IOException, InterruptedException, AuthServiceException {
         String jsonPayload = String.format(
                 "{\"email\":\"%s\",\"nonce\":\"%s\",\"timestamp\":%d,\"hmac\":\"%s\"}",
                 email, nonce, timestamp, hmac);
@@ -61,18 +64,47 @@ public class AuthService {
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() == 200) {
-            // On suppose que la réponse contient le token dans le champ accessToken (JSON)
-            String body = response.body();
-            // Extraire le token du JSON
-            int idx = body.indexOf("\"accessToken\":");
-            if (idx != -1) {
-                int start = body.indexOf('"', idx + 14) + 1;
-                int end = body.indexOf('"', start);
-                if (start > 0 && end > start) {
-                    return body.substring(start, end);
-                }
-            }
-            return body;
+            return parseLoginResponse(response.body(), email, nonce, timestamp);
+        }
+        throw new AuthServiceException(response.body());
+    }
+
+    static AuthSession parseLoginResponse(String body, String email, String nonce, long timestamp)
+            throws AuthServiceException {
+        String accessToken = extractJsonStringField(body, "accessToken");
+        String expiresAt = extractJsonStringField(body, "expiresAt");
+        if (accessToken == null || expiresAt == null) {
+            throw new AuthServiceException("Réponse de connexion invalide.");
+        }
+        return new AuthSession(email, nonce, timestamp, accessToken, expiresAt);
+    }
+
+    /**
+     * Change le mot de passe d'un utilisateur.
+     * @param email email de l'utilisateur
+     * @param oldPassword ancien mot de passe
+     * @param newPassword nouveau mot de passe
+     * @param confirmPassword confirmation du nouveau mot de passe
+     * @return message de succès du backend
+     * @throws IOException erreur réseau
+     * @throws InterruptedException interruption
+     * @throws AuthServiceException si le backend refuse le changement
+     */
+    public String changePassword(String email, String oldPassword, String newPassword, String confirmPassword)
+            throws IOException, InterruptedException, AuthServiceException {
+        String jsonPayload = String.format(
+                "{\"email\":\"%s\",\"oldPassword\":\"%s\",\"newPassword\":\"%s\",\"confirmPassword\":\"%s\"}",
+                email, oldPassword, newPassword, confirmPassword);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/auth/change-password"))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 200) {
+            return response.body();
         }
         throw new AuthServiceException(response.body());
     }
@@ -85,7 +117,7 @@ public class AuthService {
      * @throws java.lang.InterruptedException interruption
      * @throws AuthServiceException si le token est invalide ou expiré
      */
-    public String getProfile(String token) throws java.io.IOException, java.lang.InterruptedException, AuthServiceException {
+    public String getProfile(String token) throws IOException, InterruptedException, AuthServiceException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/me?token=" + token))
                 .GET()
@@ -95,5 +127,10 @@ public class AuthService {
             return response.body();
         }
         throw new AuthServiceException(response.body());
+    }
+
+    static String extractJsonStringField(String body, String fieldName) {
+        Matcher matcher = Pattern.compile(String.format("\\\"%s\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"", Pattern.quote(fieldName))).matcher(body);
+        return matcher.find() ? matcher.group(1) : null;
     }
 }

@@ -8,19 +8,44 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.autclient.controllers.ProfileController"
-      spacing="20"
+      spacing="12"
       alignment="CENTER"
-      prefWidth="400"
-      prefHeight="500">
+      prefWidth="500"
+      prefHeight="680"
+      style="-fx-background-color: #f8f9fa;">
 
     <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
+        <Insets top="30" right="30" bottom="30" left="30"/>
     </padding>
 
-    <Label text="Profil" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label text="Profil"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #343a40;"/>
 
-    <Label fx:id="welcomeLabel" style="-fx-font-size: 16px;"/>
+    <Label fx:id="welcomeLabel"
+           wrapText="true"
+           style="-fx-font-size: 16px; -fx-text-fill: #212529;"/>
 
-    <Button text="Se déconnecter" onAction="#handleLogout" maxWidth="Infinity"/>
+    <VBox spacing="4"
+          style="-fx-background-color: white; -fx-border-color: #dee2e6; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 14;">
+        <Label text="Preuve de connexion" style="-fx-font-weight: bold; -fx-text-fill: #495057;"/>
+        <Label text="Email" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+        <Label fx:id="emailLabel" wrapText="true" style="-fx-text-fill: #212529;"/>
+        <Label text="Nonce" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+        <Label fx:id="nonceLabel" wrapText="true" style="-fx-text-fill: #212529;"/>
+        <Label text="Timestamp" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+        <Label fx:id="timestampLabel" wrapText="true" style="-fx-text-fill: #212529;"/>
+        <Label text="Expiration token" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+        <Label fx:id="expiresAtLabel" wrapText="true" style="-fx-text-fill: #212529;"/>
+        <Label text="Token d'accès" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+        <Label fx:id="tokenLabel" wrapText="true" style="-fx-text-fill: #212529; -fx-font-family: 'Consolas';"/>
+    </VBox>
+
+    <Label fx:id="messageLabel" wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #0f5132;"/>
+
+    <Button text="Changer le mot de passe" onAction="#handleChangePassword" maxWidth="Infinity"
+            style="-fx-background-color: #0d6efd; -fx-text-fill: white;"/>
+
+    <Button text="Se déconnecter" onAction="#handleLogout" maxWidth="Infinity"
+            style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
 
 </VBox>

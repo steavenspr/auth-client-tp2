@@ -16,7 +16,7 @@ public class MainApp extends Application {
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         scene.getStylesheets().add(getClass().getResource(
                 "/com/example/autclient/styles.css").toExternalForm());
-        stage.setTitle("Auth Client - TP3");
+        stage.setTitle("Auth Client - TP4");
         stage.setScene(scene);
         stage.show();
     }

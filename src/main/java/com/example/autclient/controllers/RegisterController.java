@@ -9,6 +9,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 /**
  * Contrôleur de la vue d'inscription.
@@ -110,7 +111,10 @@ public class RegisterController {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/autclient/views/login-view.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(loader.load(), 400, 520));
+            Scene scene = new Scene(loader.load(), 400, 520);
+            scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+            scene.getStylesheets().add(getClass().getResource("/com/example/autclient/styles.css").toExternalForm());
+            stage.setScene(scene);
         } catch (Exception e) {
             messageLabel.setText("Erreur de navigation.");
         }
