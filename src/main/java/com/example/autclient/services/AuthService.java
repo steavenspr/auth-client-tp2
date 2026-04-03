@@ -18,8 +18,18 @@ import java.util.regex.Pattern;
  */
 public class AuthService {
 
-    private static final String BASE_URL = "http://localhost:8080/api";
-    private final HttpClient client = HttpClient.newHttpClient();
+    private static final String DEFAULT_BASE_URL = "http://localhost:8080/api";
+    private final HttpClient client;
+    private final String baseUrl;
+
+    public AuthService() {
+        this(HttpClient.newHttpClient(), DEFAULT_BASE_URL);
+    }
+
+    AuthService(HttpClient client, String baseUrl) {
+        this.client = client;
+        this.baseUrl = baseUrl;
+    }
 
     /**
      * Inscrit un nouvel utilisateur auprès du backend.
@@ -32,7 +42,7 @@ public class AuthService {
      */
     public String register(String email, String password) throws IOException, InterruptedException, AuthServiceException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/auth/register?email=" + email + "&password=" + password))
+                .uri(URI.create(baseUrl + "/auth/register?email=" + email + "&password=" + password))
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -58,7 +68,7 @@ public class AuthService {
                 "{\"email\":\"%s\",\"nonce\":\"%s\",\"timestamp\":%d,\"hmac\":\"%s\"}",
                 email, nonce, timestamp, hmac);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/auth/login"))
+                .uri(URI.create(baseUrl + "/auth/login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                 .build();
@@ -97,7 +107,7 @@ public class AuthService {
                 email, oldPassword, newPassword, confirmPassword);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/auth/change-password"))
+                .uri(URI.create(baseUrl + "/auth/change-password"))
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonPayload))
                 .build();
@@ -119,7 +129,7 @@ public class AuthService {
      */
     public String getProfile(String token) throws IOException, InterruptedException, AuthServiceException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/me?token=" + token))
+                .uri(URI.create(baseUrl + "/me?token=" + token))
                 .GET()
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

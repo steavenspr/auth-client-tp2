@@ -99,6 +99,10 @@ public class RegisterController {
             authService.register(email, password);
             messageLabel.setStyle("-fx-text-fill: green;");
             messageLabel.setText("Inscription réussie ! Vous pouvez vous connecter.");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setText("Operation interrompue, veuillez reessayer.");
         } catch (Exception e) {
             messageLabel.setStyle("-fx-text-fill: red;");
             messageLabel.setText("Échec de l'inscription. Email déjà utilisé ou mot de passe invalide.");
