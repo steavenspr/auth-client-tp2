@@ -1,5 +1,6 @@
 package com.example.autclient.controllers;
 
+import com.example.autclient.services.AuthSession;
 import com.example.autclient.services.AuthService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 /**
  * Contrôleur de la vue de connexion.
@@ -58,8 +60,8 @@ public class LoginController {
             // Calculer le HMAC-SHA256 sur la concaténation email:nonce:timestamp
             String data = email + ":" + nonce + ":" + timestamp;
             String hmac = calculateHmacSHA256(password, data); // Utilise le mot de passe comme clé HMAC côté client
-            String token = authService.login(email, nonce, timestamp, hmac);
-            goToProfile(token);
+            AuthSession session = authService.login(email, nonce, timestamp, hmac);
+            goToProfile(session);
         } catch (java.security.NoSuchAlgorithmException | java.security.InvalidKeyException e) {
             messageLabel.setText("Erreur technique lors du calcul HMAC.");
         } catch (java.io.IOException | java.lang.InterruptedException e) {
@@ -104,24 +106,29 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/autclient/views/register-view.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(loader.load(), 400, 500));
+            Scene scene = new Scene(loader.load(), 400, 500);
+            scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+            scene.getStylesheets().add(getClass().getResource("/com/example/autclient/styles.css").toExternalForm());
+            stage.setScene(scene);
         } catch (java.io.IOException e) {
             messageLabel.setText("Erreur de navigation.");
         }
     }
 
     /**
-     * Navigue vers la vue de profil après connexion réussie et transmet le token d'accès.
-     * @param token accessToken JWT reçu du backend après authentification forte
+     * Navigue vers la vue de profil après connexion réussie et transmet la session complète.
+     * @param session données de session renvoyées par le backend après authentification forte
      */
-    private void goToProfile(String token) {
+    private void goToProfile(AuthSession session) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/autclient/views/profile-view.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 400, 500);
+            Scene scene = new Scene(loader.load(), 500, 680);
+            scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+            scene.getStylesheets().add(getClass().getResource("/com/example/autclient/styles.css").toExternalForm());
             ProfileController profileController = loader.getController();
-            profileController.initData(token);
+            profileController.initData(session);
             stage.setScene(scene);
         } catch (java.io.IOException e) {
             messageLabel.setText("Erreur de navigation.");
