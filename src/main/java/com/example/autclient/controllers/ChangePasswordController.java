@@ -17,6 +17,9 @@ import org.kordamp.bootstrapfx.BootstrapFX;
  */
 public class ChangePasswordController {
 
+    private static final String ERROR_STYLE = "-fx-text-fill: red;";
+    private static final String SUCCESS_STYLE = "-fx-text-fill: green;";
+
     @FXML
     private TextField emailField;
     @FXML
@@ -51,38 +54,36 @@ public class ChangePasswordController {
         String confirmPassword = confirmPasswordField.getText();
 
         if (email.isEmpty() || oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Veuillez remplir tous les champs.");
+            showError("Veuillez remplir tous les champs.");
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Les nouveaux mots de passe ne correspondent pas.");
+            showError("Les nouveaux mots de passe ne correspondent pas.");
             return;
         }
 
         try {
             String response = authService.changePassword(email, oldPassword, newPassword, confirmPassword);
-            messageLabel.setStyle("-fx-text-fill: green;");
-            messageLabel.setText(response);
+            showSuccess(response);
             oldPasswordField.clear();
             newPasswordField.clear();
             confirmPasswordField.clear();
+        } catch (InterruptedException e) {
+            // Preserve interruption status so upper layers can react correctly.
+            Thread.currentThread().interrupt();
+            showError("Operation interrompue, veuillez reessayer.");
         } catch (AuthServiceException e) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Échec du changement de mot de passe : " + e.getMessage());
+            showError("Echec du changement de mot de passe : " + e.getMessage());
         } catch (Exception e) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Erreur réseau ou technique lors du changement de mot de passe.");
+            showError("Erreur reseau ou technique lors du changement de mot de passe.");
         }
     }
 
     @FXML
     private void handleBackToProfile() {
         if (session == null) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Session introuvable.");
+            showError("Session introuvable.");
             return;
         }
 
@@ -97,9 +98,18 @@ public class ChangePasswordController {
             controller.initData(session);
             stage.setScene(scene);
         } catch (Exception e) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Erreur de navigation vers le profil.");
+            showError("Erreur de navigation vers le profil.");
         }
+    }
+
+    private void showError(String message) {
+        messageLabel.setStyle(ERROR_STYLE);
+        messageLabel.setText(message);
+    }
+
+    private void showSuccess(String message) {
+        messageLabel.setStyle(SUCCESS_STYLE);
+        messageLabel.setText(message);
     }
 }
 
