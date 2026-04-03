@@ -21,6 +21,8 @@ import org.kordamp.bootstrapfx.BootstrapFX;
 
 public class RegisterController {
 
+    private static final String ERROR_STYLE = "-fx-text-fill: red;";
+
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private PasswordField passwordConfirmField;
@@ -90,7 +92,7 @@ public class RegisterController {
         }
 
         if (!password.equals(passwordConfirm)) {
-            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setStyle(ERROR_STYLE);
             messageLabel.setText("Les mots de passe ne correspondent pas.");
             return;
         }
@@ -101,10 +103,10 @@ public class RegisterController {
             messageLabel.setText("Inscription réussie ! Vous pouvez vous connecter.");
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setStyle(ERROR_STYLE);
             messageLabel.setText("Operation interrompue, veuillez reessayer.");
         } catch (Exception e) {
-            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setStyle(ERROR_STYLE);
             messageLabel.setText("Échec de l'inscription. Email déjà utilisé ou mot de passe invalide.");
         }
     }
