@@ -43,8 +43,8 @@ public class ProfileController {
     private AuthSession session;
 
     /**
-     * Initialise la vue de profil avec le token d'accès et charge les informations utilisateur.
-     * @param token accessToken JWT reçu après authentification
+     * Initialise la vue de profil avec les données de session et charge les informations utilisateur.
+     * @param session données de session reçues après authentification
      */
     public void initData(AuthSession session) {
         this.session = session;
@@ -58,6 +58,12 @@ public class ProfileController {
             tokenLabel.setText(session.accessToken());
             if (messageLabel != null) {
                 messageLabel.setText("Connexion vérifiée avec succès.");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            welcomeLabel.setText("Operation interrompue pendant le chargement du profil.");
+            if (messageLabel != null) {
+                messageLabel.setText("Chargement interrompu. Veuillez reessayer.");
             }
         } catch (Exception e) {
             welcomeLabel.setText("Erreur lors du chargement du profil.");

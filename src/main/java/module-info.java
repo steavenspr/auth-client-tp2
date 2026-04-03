@@ -9,6 +9,7 @@ module com.example.autclient {
     requires org.kordamp.bootstrapfx.core;
 
     requires java.net.http;
+    requires jdk.httpserver;
 
     opens com.example.autclient to javafx.fxml;
     opens com.example.autclient.controllers to javafx.fxml;
